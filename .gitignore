@@ -1,0 +1,25 @@
+.venv/
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Local runtime data
+data/*.db
+data/*.db-*
+/data/models/
+/data/qdrant/
+
+# Generated reports
+/exports/
+
+# Frontend
+/frontend/node_modules/
+/frontend/dist/
+/frontend/coverage/
