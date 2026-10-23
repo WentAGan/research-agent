@@ -1,0 +1,30 @@
+name: cleanup
+
+on:
+  push:
+    branches:
+      - import-staging
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove temporary branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          main_sha="$(git ls-remote "$remote" refs/heads/main | cut -f1)"
+          payload_sha="$(git ls-remote "$remote" refs/heads/payload-ready | cut -f1)"
+          test -n "$main_sha"
+          test -n "$payload_sha"
+          test "$main_sha" = "$payload_sha"
+          git init /tmp/cleanup
+          cd /tmp/cleanup
+          git remote add origin "$remote"
+          git push origin --delete payload-ready
+          git push origin --delete import-staging
